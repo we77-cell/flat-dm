@@ -10,7 +10,7 @@ For the full list of settings and their values, see
 https://docs.djangoproject.com/en/5.0/ref/settings/
 """
 
-import os
+import os, dj_database_url
 from pathlib import Path
 
 
@@ -76,17 +76,21 @@ WSGI_APPLICATION = 'invoicer_project.wsgi.application'
 # Database
 # https://docs.djangoproject.com/en/5.0/ref/settings/#databases
 
-DATABASES = {
-    'default': {
-        'ENGINE': 'django.db.backends.postgresql',
-        'NAME': 'invoicer',
-        'USER': 'postgres',
-        'PASSWORD': 'ourc1',
-        'HOST': 'localhost',
-        'PORT': '5432',
-    }
-}
+# DATABASES = {
+#     'default': {
+#         'ENGINE': 'django.db.backends.postgresql',
+#         'NAME': 'invoicer',
+#         'USER': 'postgres',
+#         'PASSWORD': 'ourc1',
+#         'HOST': 'localhost',
+#         'PORT': '5432',
+#     }
+# }
 
+# Replace your existing DATABASES configuration with the following:
+DATABASES = {
+    'default': dj_database_url.config(conn_max_age=600, ssl_require=True)
+}
 
 
 # Password validation
