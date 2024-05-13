@@ -1,0 +1,56 @@
+<!-- dashboard.html -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Dashboard - R</title>
+  <style>
+    body {
+      font-family: 'Arial', sans-serif;
+      margin: 0;
+      padding: 0;
+      background-color: #f0f2f5;
+      color: #333;
+    }
+    header {
+      background-color: #007bff;
+      color: #ffffff;
+      padding: 20px;
+      text-align: center;
+    }
+    section {
+      padding: 20px;
+    }
+    a {
+      display: inline-block;
+      margin-right: 10px;
+      padding: 10px;
+      background-color: #007bff;
+      color: #ffffff;
+      text-decoration: none;
+      border-radius: 5px;
+    }
+    a:hover {
+      background-color: #0056b3;
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <h1>R</h1>
+  </header>
+  <section>
+    <h2>Welcome to Your Dashboard, {{ user.username }}!</h2>
+    <!-- Add the content of your dashboard here -->
+
+    <p>Your User ID is: {{ user.id }}</p> <!-- Ensure you use user.id to display the user's ID -->
+
+    <!-- Add links/buttons for creating and viewing invoices -->
+    <!-- Adjust these links according to your application structure -->
+    <a href="{% url 'invoicer:create_invoice' %}">Make Receipt</a>
+    <a href="{% url 'invoicer:view_invoices' %}">View Receipts</a>
+  </section>
+</body>
+
+</html>

@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Your Receipts</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 20px;
+        }
+
+        h2 {
+            color: #333;
+        }
+
+        .search-form {
+            margin-bottom: 20px;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
+        }
+
+        th, td {
+            border: 1px solid #ddd;
+            padding: 8px;
+            text-align: left;
+        }
+
+        th {
+            background-color: #f2f2f2;
+        }
+
+        form {
+            margin-bottom: 20px;
+        }
+
+        input[type="text"] {
+            padding: 8px;
+            width: 200px;
+        }
+
+        button {
+            padding: 8px;
+            cursor: pointer;
+        }
+
+        .total-amount {
+            float: right;
+            margin-top: -40px;
+        }
+
+        /* Add your custom styles here */
+
+    </style>
+</head>
+<body>
+    <h2>Your Receipts</h2>
+
+    <!-- Display Daily Total -->
+    <p class="total-amount">Total Amount for Today: {{ total_amount_day }}</p>
+    <br>
+    <!-- Display Monthly Total -->
+    <p class="total-amount">Total Amount for This Month: {{ total_amount_month }}</p>
+
+    <!-- Search Form -->
+    <form class="search-form" method="get" action="{% url 'invoicer:view_invoices' %}">
+        <input type="text" name="q" placeholder="Search by receipt number or description" value="{{ query }}">
+        <button type="submit">Search</button>
+    </form>
+
+    <!-- Invoices Table -->
+    {% if invoices %}
+        <table>
+            <thead>
+                <tr>
+                    <th>Receipt Number</th>
+                    <th>Business</th>
+                    <th>Agent</th>
+                    <th>Customer</th>
+                    <th>Date</th>
+                    <th>Description</th>
+                    <th>Amount</th>
+                    <!-- Add more columns as needed -->
+                    <!-- <th>Actions</th> -->
+                </tr>
+            </thead>
+            <tbody>
+                {% for invoice in invoices %}
+                    <tr>
+                        <td>{{ invoice.invoice_number }}</td>
+                        <td>{{ invoice.business }}</td>
+                        <td>{{ invoice.agent }}</td>
+                        <td>{{ invoice.customer }}</td>
+                        <td>{{ invoice.date }}</td>
+                        <td>{{ invoice.description }}</td>
+                        <td>{{ invoice.amount }}</td>
+                        <!-- Add more columns as needed -->
+                        <td>
+                            {% if invoice.user == user %}
+                                <!-- Check if the logged-in user is the creator -->
+                                <a href="{% url 'invoicer:edit_invoice' invoice.id %}">Edit</a>
+                            {% else %}
+                                <!-- Display actions for other scenarios if needed -->
+                            {% endif %}
+                        </td>
+                    </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    {% else %}
+        <p>No receipts available.</p>
+    {% endif %}
+</body>
+</html>

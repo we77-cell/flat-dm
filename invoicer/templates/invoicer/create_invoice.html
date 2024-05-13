@@ -1,0 +1,144 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Create Invoice</title>
+    <style>
+        /* Your existing styles */
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f4f4;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            height: 100vh;
+        }
+
+        .invoice-container {
+            text-align: center;
+            background-color: #fff;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            width: 400px;
+        }
+
+        h1 {
+            color: #007bff;
+        }
+
+        form {
+            display: flex;
+            flex-direction: column;
+        }
+
+        label {
+            margin-bottom: 8px;
+        }
+
+        input, select {
+            padding: 8px;
+            margin-bottom: 16px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+        }
+
+        button {
+            background-color: #007bff;
+            color: #fff;
+            padding: 10px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+
+        button:hover {
+            background-color: #0056b3;
+        }
+        .message {
+            margin-top: 20px;
+            padding: 10px;
+            border-radius: 5px;
+            color: #155724;
+            background-color: #d4edda;
+            border-color: #c3e6cb;
+            display: none; /* Initially hide the message box */
+        }
+    </style>
+</head>
+<body>
+    <div class="invoice-container">
+        <h1>Create Invoice</h1>
+        <form id="create-invoice-form" method="post" action="{% url 'invoicer:create_invoice' %}">
+            {% csrf_token %}
+            <label for="id_business">Business:</label>
+            {{ form.business }}
+            <label for="id_agent">Agent:</label>
+            {{ form.agent }}
+            <label for="id_customer">Customer:</label>
+            {{ form.customer }}
+            <label for="id_manual_user_id">Customer ID:</label>
+            {{ form.manual_user_id }}
+            <label for="id_invoice_number">Receipt Number:</label>
+            {{ form.invoice_number }}
+            <label for="id_date">Date:</label>
+            {{ form.date }}
+            <label for="id_description">Description:</label>
+            {{ form.description }}
+            <label for="id_amount">Amount:</label>
+            {{ form.amount }}
+            <!-- Your form fields -->
+            <button type="button" id="invoice-button">Create Receipt</button>
+        </form>
+        <!-- Message area -->
+        <div id="message" style="display: none;"></div>
+
+        <script>
+            document.addEventListener('DOMContentLoaded', function () {
+                const form = document.getElementById('create-invoice-form');
+                const invoiceButton = document.getElementById('invoice-button');
+                const messageBox = document.getElementById('message'); // Get the message box
+
+                invoiceButton.addEventListener('click', function () {
+                    const formData = new FormData(form);
+
+                    fetch(form.action, {
+                        method: 'POST',
+                        body: formData,
+                        headers: {
+                            'X-Requested-With': 'XMLHttpRequest',
+                            'X-CSRFToken': document.querySelector('[name=csrfmiddlewaretoken]').value,
+                        },
+                    })
+                    .then(response => response.json())
+                    .then(data => {
+                        console.log('Server Response:', data);
+
+                        if (data.success) {
+                            messageBox.textContent = data.message;
+                            messageBox.style.display = 'block';
+                            messageBox.style.backgroundColor = '#d4edda'; // Green background for success
+                            messageBox.style.color = '#155724'; // Dark green text for success
+                            messageBox.style.borderColor = '#c3e6cb'; // Light green border for success
+                            form.reset();
+                         } else {
+                            messageBox.textContent = data.message || 'Failed to create invoice.';
+                            messageBox.style.display = 'block';
+                            messageBox.style.backgroundColor = '#f8d7da'; // Red background for failure
+                            messageBox.style.color = '#721c24'; // Dark red text for failure
+                            messageBox.style.borderColor = '#f5c6cb'; // Light red border for failure
+                        }
+                    })
+                    .catch(error => {
+                        console.error('Error:', error);
+                    });
+                });
+            });
+        </script>
+    </div>
+</body>
+</html>
